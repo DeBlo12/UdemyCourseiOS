@@ -85,6 +85,7 @@
                     </view>
                     <connections>
                         <outlet property="falseBtn" destination="tbn-vQ-GyC" id="qMT-4m-nHH"/>
+                        <outlet property="progressBar" destination="TXm-qh-7Xg" id="icI-NK-ltg"/>
                         <outlet property="progressViewBar" destination="TXm-qh-7Xg" id="led-RJ-q4T"/>
                         <outlet property="questionLbl" destination="rSI-li-mhO" id="KIA-0N-503"/>
                         <outlet property="trueBtn" destination="oVw-Hl-IRe" id="ZIw-Pr-dCd"/>
