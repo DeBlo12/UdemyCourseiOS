@@ -24,8 +24,14 @@
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="fal-oS-tEg">
                                 <rect key="frame" x="20" y="44" width="374" height="818"/>
                                 <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dtR-MP-I9M">
+                                        <rect key="frame" x="0.0" y="0.0" width="374" height="45.5"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalCompressionResistancePriority="1000" text="Question Text" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rSI-li-mhO">
-                                        <rect key="frame" x="0.0" y="0.0" width="374" height="618"/>
+                                        <rect key="frame" x="0.0" y="55.5" width="374" height="562.5"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="30"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -69,11 +75,17 @@
                                         <color key="trackTintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </progressView>
                                 </subviews>
+                                <constraints>
+                                    <constraint firstItem="dtR-MP-I9M" firstAttribute="top" secondItem="fal-oS-tEg" secondAttribute="top" id="asg-CK-JB9"/>
+                                    <constraint firstItem="rSI-li-mhO" firstAttribute="centerX" secondItem="fal-oS-tEg" secondAttribute="centerX" id="cjD-fe-aJO"/>
+                                    <constraint firstItem="dtR-MP-I9M" firstAttribute="leading" secondItem="fal-oS-tEg" secondAttribute="leading" id="shL-sU-M3R"/>
+                                </constraints>
                             </stackView>
                         </subviews>
                         <color key="backgroundColor" red="0.14509803921568626" green="0.17254901960784313" blue="0.29019607843137252" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="fal-oS-tEg" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="9eb-B8-Mk2"/>
+                            <constraint firstItem="fal-oS-tEg" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="EUh-om-GRs"/>
                             <constraint firstItem="eGL-jB-Wwb" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="IXF-La-IbW"/>
                             <constraint firstAttribute="bottom" secondItem="eGL-jB-Wwb" secondAttribute="bottom" id="LxD-MF-eVq"/>
                             <constraint firstAttribute="trailingMargin" secondItem="fal-oS-tEg" secondAttribute="trailing" id="TqZ-Hr-0o6"/>
@@ -88,6 +100,7 @@
                         <outlet property="progressBar" destination="TXm-qh-7Xg" id="icI-NK-ltg"/>
                         <outlet property="progressViewBar" destination="TXm-qh-7Xg" id="led-RJ-q4T"/>
                         <outlet property="questionLbl" destination="rSI-li-mhO" id="KIA-0N-503"/>
+                        <outlet property="scoreLbl" destination="dtR-MP-I9M" id="ljX-Vb-cJ8"/>
                         <outlet property="trueBtn" destination="oVw-Hl-IRe" id="ZIw-Pr-dCd"/>
                     </connections>
                 </viewController>
