@@ -58,7 +58,8 @@ class ViewController: UIViewController {
         if segue.identifier == "goToResults" {
             let destinationVC = segue.destination as! ResultVC
             destinationVC.bmiValue = bmiBrain.getBMIValue()
-            
+            destinationVC.advice = bmiBrain.getAdvice()
+            destinationVC.color = bmiBrain.getColor()
         }
         
         

@@ -208,6 +208,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="Iun-3h-hY1"/>
                     <connections>
+                        <outlet property="backgroundColor" destination="r83-N3-Ash" id="O5A-Ep-QMl"/>
                         <outlet property="bmiScoreLbl" destination="VU9-2W-Sd5" id="dJl-pa-5Vq"/>
                         <outlet property="recommendationLbl" destination="9IV-CT-mxw" id="0aJ-1s-Avx"/>
                     </connections>
