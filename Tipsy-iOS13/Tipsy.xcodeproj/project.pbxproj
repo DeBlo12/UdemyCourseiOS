@@ -13,6 +13,9 @@
 		ADB6895A2326708D006D4E2B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ADB689582326708D006D4E2B /* Main.storyboard */; };
 		ADB6895C2326708E006D4E2B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ADB6895B2326708E006D4E2B /* Assets.xcassets */; };
 		ADB6895F2326708E006D4E2B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ADB6895D2326708E006D4E2B /* LaunchScreen.storyboard */; };
+		C835480623A5140E00DFF37E /* Tip.swift in Sources */ = {isa = PBXBuildFile; fileRef = C835480523A5140E00DFF37E /* Tip.swift */; };
+		C835480823A5142100DFF37E /* TipBrain.swift in Sources */ = {isa = PBXBuildFile; fileRef = C835480723A5142100DFF37E /* TipBrain.swift */; };
+		C8B74A3723A51729005EEB6F /* ResultVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8B74A3623A51729005EEB6F /* ResultVC.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +27,9 @@
 		ADB6895B2326708E006D4E2B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		ADB6895E2326708E006D4E2B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		ADB689602326708E006D4E2B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C835480523A5140E00DFF37E /* Tip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tip.swift; sourceTree = "<group>"; };
+		C835480723A5142100DFF37E /* TipBrain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TipBrain.swift; sourceTree = "<group>"; };
+		C8B74A3623A51729005EEB6F /* ResultVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultVC.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,15 +62,50 @@
 		ADB689512326708D006D4E2B /* Tipsy */ = {
 			isa = PBXGroup;
 			children = (
-				ADB689522326708D006D4E2B /* AppDelegate.swift */,
-				ADB689542326708D006D4E2B /* SceneDelegate.swift */,
-				ADB689562326708D006D4E2B /* ViewController.swift */,
-				ADB689582326708D006D4E2B /* Main.storyboard */,
+				C835480223A513F100DFF37E /* Supporting Files */,
+				C835480923A5142400DFF37E /* Model */,
+				C835480423A5140300DFF37E /* View */,
+				C835480323A513FB00DFF37E /* Controller */,
 				ADB6895B2326708E006D4E2B /* Assets.xcassets */,
 				ADB6895D2326708E006D4E2B /* LaunchScreen.storyboard */,
 				ADB689602326708E006D4E2B /* Info.plist */,
 			);
 			path = Tipsy;
+			sourceTree = "<group>";
+		};
+		C835480223A513F100DFF37E /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				ADB689522326708D006D4E2B /* AppDelegate.swift */,
+				ADB689542326708D006D4E2B /* SceneDelegate.swift */,
+			);
+			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		C835480323A513FB00DFF37E /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				ADB689562326708D006D4E2B /* ViewController.swift */,
+				C8B74A3623A51729005EEB6F /* ResultVC.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		C835480423A5140300DFF37E /* View */ = {
+			isa = PBXGroup;
+			children = (
+				ADB689582326708D006D4E2B /* Main.storyboard */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		C835480923A5142400DFF37E /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				C835480523A5140E00DFF37E /* Tip.swift */,
+				C835480723A5142100DFF37E /* TipBrain.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -139,8 +180,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				ADB689572326708D006D4E2B /* ViewController.swift in Sources */,
+				C8B74A3723A51729005EEB6F /* ResultVC.swift in Sources */,
+				C835480623A5140E00DFF37E /* Tip.swift in Sources */,
 				ADB689532326708D006D4E2B /* AppDelegate.swift in Sources */,
 				ADB689552326708D006D4E2B /* SceneDelegate.swift in Sources */,
+				C835480823A5142100DFF37E /* TipBrain.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -31,7 +31,7 @@ class ViewController: UIViewController {
         
         let heightString = String(format: "%.2f", sender.value)
         heightLabel.text = "\(heightString) M"
-    }
+    }	
     
     @IBAction func weightChangeSlider(_ sender: UISlider) {
         
