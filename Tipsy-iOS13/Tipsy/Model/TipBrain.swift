@@ -11,7 +11,9 @@ import Foundation
 struct TipBrain {
     
     
-    let tip = Tip()
+    let tip: Tip?
+    
+    
     
     
     

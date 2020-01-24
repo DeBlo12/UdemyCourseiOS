@@ -14,6 +14,11 @@ class ViewController: UIViewController {
     @IBOutlet weak var billTotalTxtfield: UITextField!
     @IBOutlet weak var personCountLbl: UILabel!
     
+    var peoplecount     = 0
+    var tipAmount       = 0.0
+    var billTotal       = 0.0
+    var finalAmount     = "0.0"
+    
     // ButtonOutlets
     @IBOutlet weak var zeroPercentTip: UIButton!
     @IBOutlet weak var tenPercentTip: UIButton!
@@ -29,33 +34,51 @@ class ViewController: UIViewController {
 
     @IBAction func tipChoice(_ sender: UIButton) {
         
+        zeroPercentTip.isSelected = false
+        tenPercentTip.isSelected = false
+        twentyPercentTip.isSelected = false
+        sender.isSelected = true
         
-        guard let tipChosen = sender.currentTitle else { return }
         
-        
-        let tipAmount: Float?
-        
-        switch tipChosen {
-        case "0%":
-            tipAmount = 0.0
-            zeroPercentTip.isSelected = true
-        case "20%":
-            tipAmount = 0.2
-            twentyPercentTip.isSelected = true
-        default:
-            tipAmount = 0.1
-            tenPercentTip.isSelected = true
-        }
-        
+        let buttonTitle = sender.currentTitle!
+        let buttonTitleMinusPercentSign =  String(buttonTitle.dropLast())
+        let buttonTitleAsANumber = Double(buttonTitleMinusPercentSign)!
+        tipAmount = buttonTitleAsANumber / 100
+
         
     }
     
     @IBAction func choosePeopleCount(_ sender: UIStepper) {
         
-        
+        personCountLbl.text = String(format: "%0.f", sender.value)
+        peoplecount = Int(sender.value)
         
     }
     
+    @IBAction func calculateSplit(_ sender: UIButton) {
+        if let bill = billTotalTxtfield.text {
+            billTotal = Double(bill)!
+            
+            let result = billTotal * (1 + tipAmount) / Double(peoplecount)
+            finalAmount = String(format: "%.2f", result)
+        } else {return}
+        
+        self.performSegue(withIdentifier: "GoToResults", sender: self)
+        
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        if segue.identifier == "GoToResults" {
+            
+            let destinationVC = segue.destination as! ResultVC
+
+            destinationVC.result    = finalAmount
+            destinationVC.split     = peoplecount
+            destinationVC.tip       = Int(tipAmount * 100)	
+            
+        }
+    }
 
 }
 

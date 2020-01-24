@@ -10,7 +10,8 @@ import Foundation
 
 struct Tip {
     
-    var totalBill: Float?
-    var tipAmount: Float?
-    var peopleCount: Int?
+    var totalBill: Float
+    var tipAmount: Float
+    var peopleCount: Int
+    
 }

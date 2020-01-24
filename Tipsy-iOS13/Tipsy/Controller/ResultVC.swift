@@ -15,17 +15,22 @@ class ResultVC: UIViewController {
     @IBOutlet weak var costPPLbl: UILabel!
     @IBOutlet weak var descriptionLbl: UILabel!
     
-    
+    var result  = "0.0"
+    var tip     = 10
+    var split   = 2
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+        costPPLbl.text = result
+        descriptionLbl.text = "Split between \(split) people, with \(tip)% tip"
     }
     
     
     
     @IBAction func recalculateBtn(_ sender: UIButton) {
+        dismiss(animated: true, completion: nil)
     }
     
     /*
