@@ -25,7 +25,7 @@ class RegisterViewController: UIViewController {
                     print(error)
                 } else {
                     print("Successfully registered")
-                    self.performSegue(withIdentifier: "RegisterToChat", sender: self)
+                    self.performSegue(withIdentifier: Constants.registerSegue, sender: self)
                     
                 }
             
