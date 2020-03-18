@@ -28,11 +28,14 @@ class ChatViewController: UIViewController {
         title = Constants.appName
         
         tableView.dataSource = self
-        
         tableView.register(UINib(nibName: Constants.cellNibName, bundle: nil), forCellReuseIdentifier: Constants.cellIdentifier)
+        
+        loadMessages()
     }
     
     @IBAction func sendPressed(_ sender: UIButton) {
+        
+//        loadMessages()
         
         if let messageBody = messageTextfield.text, let messageSender = Auth.auth().currentUser?.email {
             // Check if the textfield and sender exist. Then send to DB.
@@ -48,10 +51,36 @@ class ChatViewController: UIViewController {
                 }
             }
         }
-        
-        
     }
     
+    
+    func loadMessages() {
+        messages = []
+        
+        db.collection(Constants.FStore.collectionName).getDocuments { (querysnapshot, error) in
+            
+            if let error = error {
+                print("There was an issue retrieving data: \(error)")
+            } else {
+                if let snapshotDocument = querysnapshot?.documents {
+                    
+                    for doc in snapshotDocument {
+                        let data = doc.data()
+                        if let sender = data[Constants.FStore.senderField] as? String, let body = data[Constants.FStore.bodyField] as? String {
+                            
+                            let newMessage = Message(sender: sender, body: body)
+                            self.messages.append(newMessage)
+                            
+                            DispatchQueue.main.async {
+                                self.tableView.reloadData()
+                            }
+                            
+                        }
+                    }
+                }
+            }
+        }
+    }
     
     
     // MARK: - NavigationBarButtonItems
