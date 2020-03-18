@@ -25,7 +25,6 @@ class ChatViewController: UIViewController {
     ]
     
   
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.hidesBackButton = true
@@ -38,6 +37,7 @@ class ChatViewController: UIViewController {
         
         loadMessages()
     }
+    
     
     @IBAction func sendPressed(_ sender: UIButton) {
                 
@@ -123,9 +123,11 @@ class ChatViewController: UIViewController {
  */
 
 extension ChatViewController: UITableViewDataSource {
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return messages.count
     }
+    
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
