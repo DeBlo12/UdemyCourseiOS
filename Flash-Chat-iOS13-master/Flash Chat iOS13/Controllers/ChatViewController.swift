@@ -8,12 +8,14 @@
 
 import UIKit
 import Firebase
+import IQKeyboardManagerSwift
 
 class ChatViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var messageTextfield: UITextField!
     
+    @IBOutlet weak var bgTxtfield: UIView!
     let db = Firestore.firestore()
     
     var messages :  [Message] = [
@@ -22,9 +24,13 @@ class ChatViewController: UIViewController {
         Message(sender: "iv@test.com", body: "Hi")
     ]
     
+  
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.hidesBackButton = true
+        navigationController?.navigationBar.barTintColor = UIColor.systemRed
+   
         title = Constants.appName
         
         tableView.dataSource = self
@@ -34,20 +40,25 @@ class ChatViewController: UIViewController {
     }
     
     @IBAction func sendPressed(_ sender: UIButton) {
-        
-//        loadMessages()
-        
+                
         if let messageBody = messageTextfield.text, let messageSender = Auth.auth().currentUser?.email {
             // Check if the textfield and sender exist. Then send to DB.
             db.collection(Constants.FStore.collectionName).addDocument(data: [
-                Constants.FStore.senderField : messageSender,
-                Constants.FStore.bodyField   : messageBody
+                Constants.FStore.senderField    : messageSender,
+                Constants.FStore.bodyField      : messageBody,
+                Constants.FStore.dateField      : Date().timeIntervalSince1970
             ]) { (error) in
                 if let error = error {
                     print("There was an error saving data to firestore, \(error)")
                     return
                 } else {
                     print("Successfully saved Data")
+                    
+                    // When updating UI from Closure, use DispatchQueue
+                    DispatchQueue.main.async {
+                        self.messageTextfield.text = ""
+                        IQKeyboardManager.shared.resignFirstResponder()
+                    }
                 }
             }
         }
@@ -55,9 +66,13 @@ class ChatViewController: UIViewController {
     
     
     func loadMessages() {
-        messages = []
+        // Collections can be queryed and listened to at the same time through SnapshotListener. Also, multiple things can be set on through . notations
         
-        db.collection(Constants.FStore.collectionName).getDocuments { (querysnapshot, error) in
+        db.collection(Constants.FStore.collectionName)
+            .order(by: Constants.FStore.dateField)
+            .addSnapshotListener { (querysnapshot, error) in
+            
+            self.messages = []
             
             if let error = error {
                 print("There was an issue retrieving data: \(error)")
@@ -71,10 +86,13 @@ class ChatViewController: UIViewController {
                             let newMessage = Message(sender: sender, body: body)
                             self.messages.append(newMessage)
                             
+                            
                             DispatchQueue.main.async {
                                 self.tableView.reloadData()
+                                
+                                let indexPath = IndexPath(row: self.messages.count - 1, section: 0)
+                                self.tableView.scrollToRow(at: indexPath, at: .top, animated: true)
                             }
-                            
                         }
                     }
                 }
@@ -111,13 +129,28 @@ extension ChatViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: Constants.cellIdentifier, for: indexPath) as! MessageCell
+        let message = messages[indexPath.row]
         
+        let cell        = tableView.dequeueReusableCell(withIdentifier: Constants.cellIdentifier, for: indexPath) as! MessageCell
         cell.label.text = messages[indexPath.row].body
-        cell.label.textColor = UIColor(named: Constants.BrandColors.lightPurple)
+        
+        // Message from current user
+        if message.sender == Auth.auth().currentUser?.email {
             
+            cell.leftImageView.isHidden         = true
+            cell.rightImageView.isHidden        = false
+            cell.messageBubble.backgroundColor  = UIColor(named: Constants.BrandColors.purple)
+            cell.label.textColor                = UIColor(named: Constants.BrandColors.lightPurple)
+
+            
+        } else {
+            cell.leftImageView.isHidden         = false
+            cell.rightImageView.isHidden        = true
+            cell.messageBubble.backgroundColor 	= UIColor(named: Constants.BrandColors.lightPurple)
+            cell.label.textColor                = UIColor(named: Constants.BrandColors.purple)
+         }
+
         return cell
-    
     }
     
     
