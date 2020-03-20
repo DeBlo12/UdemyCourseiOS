@@ -22,17 +22,54 @@ class TodoListViewController: UITableViewController {
     
     
     
-    let itemArray = ["Test1","Test2","Luke Skywalker","Kylo Ren"]
-    
-    
-    
-    
+    var itemArray = ["Test1","Test2","Luke Skywalker","Kylo Ren"]
     
     
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
+    
+    
+    
+    
+    @IBAction func addNewItems(_ sender: UIBarButtonItem) {
+        
+        var textField = UITextField()
+        
+        let addAlert = UIAlertController(title: "Add a new thing", message: "", preferredStyle: .alert)
+        let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
+            // What happens once user clicks addItem Button on UIAlert
+            print("Success")
+            if let newItem = textField.text {
+                self.itemArray.append(newItem)
+                print(self.itemArray)
+                self.tableView.reloadData()
+            }
+            
+        }
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (action) in
+            print("nothing was added")
+            self.dismiss(animated: true, completion: nil)
+        }
+        
+        addAlert.addTextField { (alertTextField) in
+            
+            alertTextField.placeholder = "Enter a new ToDo Item."
+            textField = alertTextField
+            
+        }
+        addAlert.addAction(cancelAction)
+        addAlert.addAction(action)
+        
+        present(addAlert, animated: true, completion: nil)
+           
+        
+    }
+    
+    
+    
 
     // MARK: - Table view data source
 
@@ -48,8 +85,8 @@ class TodoListViewController: UITableViewController {
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
         let cell = tableView.dequeueReusableCell(withIdentifier: Constants.TableviewComponents.cellReusableIdentifier, for: indexPath)
-
         cell.textLabel?.text = itemArray[indexPath.row]
 
         return cell
@@ -91,6 +128,25 @@ class TodoListViewController: UITableViewController {
     }
     */
 
+    // MARK: - TableView Delegate Methods
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        // print(itemArray[indexPath.row])
+        
+        if tableView.cellForRow(at: indexPath)?.accessoryType == .checkmark {
+            tableView.cellForRow(at: indexPath)?.accessoryType = .none
+        } else {
+            tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
+        }
+        
+        tableView.deselectRow(at: indexPath, animated: true)
+        
+        
+    }
+    
+    
+    
     /*
     // MARK: - Navigation
 
