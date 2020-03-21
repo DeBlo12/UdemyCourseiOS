@@ -9,28 +9,25 @@
 import UIKit
 
 class TodoListViewController: UITableViewController {
+    
+    var itemArray = [TodoItem]()
+    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
 
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
+        loadItems()
+        
     }
     
-    
-    
-    var itemArray = ["Test1","Test2","Luke Skywalker","Kylo Ren"]
     
     
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
-    
-    
     
     
     @IBAction func addNewItems(_ sender: UIBarButtonItem) {
@@ -41,13 +38,14 @@ class TodoListViewController: UITableViewController {
         let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
             // What happens once user clicks addItem Button on UIAlert
             print("Success")
-            if let newItem = textField.text {
-                self.itemArray.append(newItem)
-                print(self.itemArray)
-                self.tableView.reloadData()
-            }
             
+            let newItem = TodoItem()
+            newItem.title = textField.text!
+            self.itemArray.append(newItem)
+            self.saveItems()
         }
+     
+        
         
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (action) in
             print("nothing was added")
@@ -69,6 +67,35 @@ class TodoListViewController: UITableViewController {
     }
     
     
+         
+    func saveItems() {
+        
+        let encoder = PropertyListEncoder()
+        
+        do {
+            let data = try encoder.encode(itemArray)
+            try data.write(to: dataFilePath!)
+        } catch {
+            print("Error encoding item array \(error)")
+        }
+        self.tableView.reloadData()
+        
+        print(self.itemArray)
+    
+    }
+    
+    func loadItems() {
+        
+        if let data = try? Data(contentsOf: dataFilePath!) {
+            
+            let decoder = PropertyListDecoder()
+            do {
+                itemArray = try decoder.decode([TodoItem].self, from: data)
+            } catch {
+                print("Error encoding item array \(error)")
+            }
+        } 
+    }
     
 
     // MARK: - Table view data source
@@ -86,8 +113,20 @@ class TodoListViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
+        
         let cell = tableView.dequeueReusableCell(withIdentifier: Constants.TableviewComponents.cellReusableIdentifier, for: indexPath)
-        cell.textLabel?.text = itemArray[indexPath.row]
+        
+        let item = itemArray[indexPath.row]
+        
+        cell.textLabel?.text = item.title
+        
+        cell.accessoryType = item.done ? .checkmark : .none
+//        This equals the line above
+//        if  item.done == true{
+//            tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
+//        } else {
+//            tableView.cellForRow(at: indexPath)?.accessoryType = .none
+//        }
 
         return cell
     }
@@ -132,13 +171,9 @@ class TodoListViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        // print(itemArray[indexPath.row])
-        
-        if tableView.cellForRow(at: indexPath)?.accessoryType == .checkmark {
-            tableView.cellForRow(at: indexPath)?.accessoryType = .none
-        } else {
-            tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
-        }
+        // Checks whether it is done, and if it isn't then it changes to done.
+        itemArray[indexPath.row].done = !itemArray[indexPath.row].done
+        saveItems()
         
         tableView.deselectRow(at: indexPath, animated: true)
         
