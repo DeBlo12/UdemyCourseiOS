@@ -17,10 +17,11 @@ class TodoListViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-
-//        loadItems()
+        
+        
+        loadItems()
         print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
+        
     }
 
     
@@ -76,18 +77,17 @@ class TodoListViewController: UITableViewController {
     }
     
     
-//    func loadItems() {
-//
-//        if let data = try? Data(contentsOf: dataFilePath!) {
-//
-//            let decoder = PropertyListDecoder()
-//            do {
-//                itemArray = try decoder.decode([TodoItem].self, from: data)
-//            } catch {
-//                print("Error encoding item array \(error)")
-//            }
-//        }
-//    }
+    func loadItems(with request: NSFetchRequest<Item> = Item.fetchRequest()) {
+        
+        do {
+            itemArray = try context.fetch(request)
+            print(itemArray)
+        } catch {
+            print("error fetching data was \(error)")
+        }
+        tableView.reloadData()
+    }
+    
     
 
     // MARK: - Table view data source
@@ -163,6 +163,11 @@ class TodoListViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
+        // Removing Data from tble
+//        context.delete(itemArray[indexPath.row])
+//        itemArray.remove(at: indexPath.row)
+
+        
         // Checks whether it is done, and if it isn't then it changes to done.
         itemArray[indexPath.row].done = !itemArray[indexPath.row].done
         saveItems()
@@ -182,4 +187,43 @@ class TodoListViewController: UITableViewController {
     }
     */
 
+}
+
+
+// MARK: - UISearchbarDelegation
+
+extension TodoListViewController: UISearchBarDelegate {
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        
+        // So it doesn't make all values in Table disappear when clicked search without Text.
+        if searchBar.text?.count == 0 {
+            loadItems()
+        } else {
+
+            let request : NSFetchRequest<Item> = Item.fetchRequest()
+            
+            request.predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
+            request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+            
+            loadItems(with: request)
+        }
+
+    }
+    
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        
+        if searchBar.text?.count == 0 {
+            
+            loadItems()
+            DispatchQueue.main.async {
+                searchBar.resignFirstResponder()
+            }
+            
+            
+        }
+        
+        
+    }
 }
