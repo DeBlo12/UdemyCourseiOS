@@ -24,6 +24,8 @@ class ViewController: UIViewController, CoinManagerDelegate {
         currencyPicker.dataSource = self
         currencyPicker.delegate = self
         coinManager.delegate = self
+        
+        print(coinManager.currencyArray)
     }
     
     
