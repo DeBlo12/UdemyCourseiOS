@@ -7,11 +7,14 @@
 //
 
 import UIKit
-import CoreData
+import RealmSwift
 
 class CategoryViewController: UITableViewController {
     
-    var categoryArray = [Category]()
+    
+    let realm = try! Realm()
+    
+    var categories: Results<Category>?
     
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
@@ -33,11 +36,10 @@ class CategoryViewController: UITableViewController {
             
             print("Succesfully added Category")
             
-            let newCategory = Category(context: self.context)
+            let newCategory = Category()
             newCategory.name = textField.text!
             
-            self.categoryArray.append(newCategory)
-            self.saveData()
+            self.saveData(category: newCategory)
         }
         
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (action) in
@@ -57,32 +59,31 @@ class CategoryViewController: UITableViewController {
         
     }
     
-    func saveData() {
+    func saveData(category: Category) {
         
         do {
-            try context.save()
+            try realm.write {
+                realm.add(category)
+            }
             
         } catch {
             print("error saving context \(error)")
         }
         
-        self.tableView.reloadData()
+        tableView.reloadData()
         
-    }
+   }
     
-    func loadData(with request: NSFetchRequest<Category> = Category.fetchRequest()) {
-        
-        do {
-            categoryArray = try context.fetch(request)
-            print(categoryArray)
-        } catch {
-            print("Error fetching Data \(error)")
-        }
-        
-        self.tableView.reloadData()
-        
-    }
     
+    func loadData() {
+
+        categories = realm.objects(Category.self)
+        
+
+        tableView.reloadData()
+
+    }
+////
     
 
     // MARK: - Table view data source
@@ -94,7 +95,7 @@ class CategoryViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return categoryArray.count
+        return categories?.count ?? 1
     }
     
     // MARK: - Table view Delegate
@@ -103,9 +104,7 @@ class CategoryViewController: UITableViewController {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: Constants.TableviewComponents.CategoryCellRI, for: indexPath)
         
-        let category = categoryArray[indexPath.row]
-        
-        cell.textLabel?.text = category.name
+        cell.textLabel?.text = categories?[indexPath.row].name ?? "Please enter a Category"
         
         return cell
         
@@ -122,25 +121,22 @@ class CategoryViewController: UITableViewController {
         let destinationVC = segue.destination as! TodoListViewController
         
         if let indexPath = tableView.indexPathForSelectedRow {
-            destinationVC.selectedCategory = categoryArray[indexPath.row]
+            destinationVC.selectedCategory = categories?[indexPath.row]
         }
         
     }
     
-    
-    
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        print(categoryArray)
-        
-        if editingStyle == .delete {
-            let categoryToDelete = categoryArray[indexPath.row]
-            context.delete(categoryToDelete)
-            categoryArray.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .fade)
-            saveData()
-            print(categoryArray)
-        }
-        
-    }
+//
+//
+//    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+//
+//        if editingStyle == .delete {
+//            let categoryToDelete = categories?[indexPath.row]
+//            realm.delete(categoryToDelete!)
+//            tableView.deleteRows(at: [indexPath], with: .fade)
+//            tableView.reloadData()
+//        }
+//
+//    }
     
 }
