@@ -13,18 +13,20 @@ class CategoryViewController: UITableViewController {
     
     
     let realm = try! Realm()
+    dynamic var categories: Results<Category>?
     
-    var categories: Results<Category>?
-    
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+
+        tableView.reloadData()
+    }
+        
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Categories"
-
+ 
         loadData()
+        tableView.reloadData()
     }
-    
     
     @IBAction func addCategoryBtn(_ sender: UIBarButtonItem) {
         
@@ -76,10 +78,9 @@ class CategoryViewController: UITableViewController {
     
     
     func loadData() {
-
-        categories = realm.objects(Category.self)
         
-
+        categories = realm.objects(Category.self).sorted(byKeyPath: "name", ascending: true)
+        
         tableView.reloadData()
 
     }
@@ -103,15 +104,18 @@ class CategoryViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: Constants.TableviewComponents.CategoryCellRI, for: indexPath)
+    
+        if let category = categories?[indexPath.row] {
+            cell.textLabel?.text = category.name ?? "Please enter a Category"
+        }
         
-        cell.textLabel?.text = categories?[indexPath.row].name ?? "Please enter a Category"
-        
+        if let categoryCount = categories?[indexPath.row].items.count {
+            cell.detailTextLabel?.text = "\(categoryCount) items in this Category."
+        }
         return cell
-        
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
         performSegue(withIdentifier: Constants.Segues.CategoryToItems, sender: self)
     }
     
@@ -123,20 +127,26 @@ class CategoryViewController: UITableViewController {
         if let indexPath = tableView.indexPathForSelectedRow {
             destinationVC.selectedCategory = categories?[indexPath.row]
         }
-        
     }
     
-//
-//
-//    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-//
-//        if editingStyle == .delete {
-//            let categoryToDelete = categories?[indexPath.row]
-//            realm.delete(categoryToDelete!)
-//            tableView.deleteRows(at: [indexPath], with: .fade)
-//            tableView.reloadData()
-//        }
-//
-//    }
+
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+
+        if editingStyle == .delete {
+            let categoryToDelete = categories?[indexPath.row]
+            let itemsToDelete = categoryToDelete?.items
+            do {
+                try realm.write() {
+                    realm.delete(itemsToDelete!)
+                    realm.delete(categoryToDelete!)
+                }
+            } catch {
+                print(error)
+            }
+            
+            tableView.deleteRows(at: [indexPath], with: .fade)
+            tableView.reloadData()
+        }
+    }
     
 }

@@ -23,6 +23,7 @@ class TodoListViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.white]
         
         
 //        loadItems()
@@ -52,6 +53,8 @@ class TodoListViewController: UITableViewController {
                         let newItem = Item()
                         newItem.title = textField.text!
                         newItem.done = false
+                        newItem.dateCreated = Date()
+                        newItem.category = currentCategory.name
                         currentCategory.items.append(newItem)
                     }
                 } catch {
@@ -59,10 +62,6 @@ class TodoListViewController: UITableViewController {
                 }
             }
             self.tableView.reloadData()
-
-           
-
-
         }
         
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (action) in
@@ -81,27 +80,11 @@ class TodoListViewController: UITableViewController {
         
         present(addAlert, animated: true, completion: nil)
     }
-//
-//
-//    func saveItems() {
-//
-//
-//        do {
-//            try realm.write {
-//
-//            }
-//        } catch {
-//            print("Error saving context \(error)")
-//        }
-//
-//        self.tableView.reloadData()
-//    }
-
+    
 
     func loadItems() {
         
-        items = selectedCategory?.items.sorted(byKeyPath: "title", ascending: true)
-        
+        items = selectedCategory?.items.sorted(byKeyPath: "dateCreated", ascending: true)
         
         tableView.reloadData()
     }
@@ -126,18 +109,16 @@ class TodoListViewController: UITableViewController {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: Constants.TableviewComponents.cellReusableIdentifier, for: indexPath)
         
-        let item = items?[indexPath.row]
+        if let item = items?[indexPath.row] {
+            cell.textLabel?.text = item.title
+            
+            cell.accessoryType = item.done ? .checkmark : .none
+            
+        } else {
+            cell.textLabel?.text = "No items added, yet."
+        }
         
-        cell.textLabel?.text = item?.title
         
-        cell.accessoryType = item!.done ? .checkmark : .none
-//        This equals the line above
-//        if  item.done == true{
-//            tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
-//        } else {
-//            tableView.cellForRow(at: indexPath)?.accessoryType = .none
-//        }
-
         return cell
     }
     
@@ -148,50 +129,69 @@ class TodoListViewController: UITableViewController {
         
         
         // Checks whether it is done, and if it isn't then it changes to done.
-        items?[indexPath.row].done = (items?[indexPath.row].done)!
+        if let item = items?[indexPath.row] {
+            
+            do {
+                try realm.write {
+                    item.done = !item.done
+                }
+            } catch {
+                print("error saving the data: \(error)")
+            }
+        }
         
+        tableView.reloadData()
         tableView.deselectRow(at: indexPath, animated: true)
         
         
     }
+    
+    
+
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+
+        if editingStyle == .delete {
+            let itemToDelete = items?[indexPath.row]
+            do {
+                try realm.write() {
+                    realm.delete(itemToDelete!)
+                }
+            } catch {
+                print(error)
+            }
+            
+            tableView.deleteRows(at: [indexPath], with: .fade)
+            tableView.reloadData()
+        }
+
+    }
+    
 
 }
 
 
 // MARK: - UISearchbarDelegation
 
-//extension TodoListViewController: UISearchBarDelegate {
-//
-//    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-//
-//        // So it doesn't make all values in Table disappear when clicked search without Text.
-//        if searchBar.text?.count == 0 {
-//            loadItems()
-//        } else {
-//
-//            let request : NSFetchRequest<Item> = Item.fetchRequest()
-//            let predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
-//
-//            request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
-//
-//            loadItems(with: request, predicate: predicate)
-//        }
-//
-//    }
-//
-//
-//    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-//
-//        if searchBar.text?.count == 0 {
-//
-//            loadItems()
-//            DispatchQueue.main.async {
-//                searchBar.resignFirstResponder()
-//            }
-//
-//
-//        }
-//
-//
-//    }
-//}
+extension TodoListViewController: UISearchBarDelegate {
+
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        // So it doesn't make all values in Table disappear when clicked search without Text.
+        if searchBar.text?.count == 0 {
+            loadItems()
+        } else {
+            items = items?.filter("title CONTAINS[cd] %@", searchBar.text).sorted(byKeyPath: "dateCreated", ascending: true)
+            tableView.reloadData()
+        }
+    }
+
+
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchBar.text?.count == 0 {
+            loadItems()
+            DispatchQueue.main.async {
+                searchBar.resignFirstResponder()
+            }
+        }
+    }
+    
+}
