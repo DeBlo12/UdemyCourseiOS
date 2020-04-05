@@ -19,7 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         
         print(Realm.Configuration.defaultConfiguration.fileURL)
-        
+        print("AppDidFinishLaunchingWithOptions")
         
         do {
             _ = try Realm()
@@ -31,7 +31,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if #available(iOS 13.0, *) {
             let appearance = UINavigationBarAppearance()
             appearance.configureWithOpaqueBackground()
-            appearance.backgroundColor = UIColor.systemTeal
+            appearance.backgroundColor = UIColor.systemGray
         
             appearance.largeTitleTextAttributes = [
                 NSAttributedString.Key.foregroundColor: UIColor.white
@@ -62,6 +62,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     }
     
+    func applicationWillEnterForeground(_ application: UIApplication) {
+        print("AppWillEnterForegroudn")
+    }
+    
+    func applicationDidBecomeActive(_ application: UIApplication) {
+        print("AppDidBecomeActive")
+    }
+    
+    func applicationWillResignActive(_ application: UIApplication) {
+        print("AppWillResignActive")
+    }
+    
+    func applicationDidEnterBackground(_ application: UIApplication) {
+        print("appDidEnterBackground")
+    }
 
 }
 

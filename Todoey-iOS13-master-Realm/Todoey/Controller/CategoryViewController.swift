@@ -15,18 +15,32 @@ class CategoryViewController: UITableViewController {
     let realm = try! Realm()
     dynamic var categories: Results<Category>?
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(true)
-
-        tableView.reloadData()
-    }
+   
+    
+    
         
     override func viewDidLoad() {
         super.viewDidLoad()
- 
         loadData()
         tableView.reloadData()
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+           super.viewWillAppear(true)
+
+           tableView.reloadData()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        print("ViewWillDisappear")
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(true)
+        print("ViewDidDisappear")
+    }
+
     
     @IBAction func addCategoryBtn(_ sender: UIBarButtonItem) {
         

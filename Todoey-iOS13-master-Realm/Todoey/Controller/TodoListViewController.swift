@@ -14,6 +14,7 @@ class TodoListViewController: UITableViewController {
     var items: Results<Item>?
     let realm = try! Realm()
     
+    @IBOutlet weak var searchBar: UISearchBar!
     
     var selectedCategory : Category? {
         didSet {
@@ -24,13 +25,33 @@ class TodoListViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.white]
-        
-        
-//        loadItems()
-        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
+        print("ViewDidLoad")
+
         
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        print("ViewWillAppear")
+        title = selectedCategory?.name
+//        searchBar.barTintColor =
+        
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(true)
+        print("ViewDidAppear")
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        print("ViewWillDisappear")
+    }
 
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(true)
+        print("ViewDidDisappear")
+    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
