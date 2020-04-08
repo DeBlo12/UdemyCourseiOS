@@ -128,7 +128,7 @@ class CategoryViewController: UITableViewController {
         }
         return cell
     }
-    
+    	
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         performSegue(withIdentifier: Constants.Segues.CategoryToItems, sender: self)
     }
