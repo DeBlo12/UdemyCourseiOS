@@ -33,7 +33,7 @@ struct WeatherManager {
     func performRequest(_ urlString: String) {
         // Create the URL
         if let url = URL(string: urlString) {
-            // Create URL Session
+            // Create URL Session	
             let session = URLSession(configuration: .default)
             
             // Give the session a task
@@ -48,7 +48,7 @@ struct WeatherManager {
                     if let weather = self.parseJSON(safeData) {
                         self.delegate?.didUpdateWeather(self, weather: weather)
                     }
-                
+                	
                 }
             }
             // start the task
